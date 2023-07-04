@@ -6,10 +6,11 @@
 #include <algorithm>
 #include <string> 
 
+#include "histogram.h"
+
 using std::cout; using std::cin; using std::vector; using std::cerr; using std::string;
 
 vector<double> input_numbers(size_t number_count);
-void find_minmax(const vector<double>& numbers, double& min, double& max);
 vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count, size_t number_count);
 
 void svg_begin(double width, double height);
@@ -56,19 +57,6 @@ vector<double> input_numbers(size_t number_count) {
     return result;
 }
 
-void find_minmax(const vector<double>& numbers, double& min, double& max) {
-    min = numbers[0];
-    max = numbers[0];
-    for (double x : numbers) {
-        if (x < min) {
-            min = x;
-        }
-        else if (x > max) {
-            max = x;
-        }
-    }
-}
-
 vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count, size_t number_count) {
     vector<size_t> result(bin_count);
 
@@ -94,6 +82,7 @@ vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count, s
     //sort(result.begin(), result.end()); // Вариант 8
     return result;
 }
+
 
 void svg_begin(double width, double height) {
     cout << "<?xml version='1.0' encoding='UTF-8'?>\n";
