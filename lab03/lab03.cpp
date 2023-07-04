@@ -24,13 +24,15 @@ int main() {
     cerr << "Enter bin count: ";
     cin >> bin_count;
 
+    string column_color = input_color_svg();
+
     // Обработка данных
 
     const auto bins = make_histogram(numbers, bin_count, number_count);
 
     // Вывод данных
 
-    show_histogram_svg(bins);
+    show_histogram_svg(bins, column_color);
 
     return 0;
 

@@ -22,7 +22,7 @@ void svg_rect(double x, double y, double width, double height, string stroke, st
     cout << "<rect x='" << x << "' y='" << y << "' width='" << width << "' height='" << height << "' stroke='" << stroke << "' fill='" << fill << "'/>";
 }
 
-void show_histogram_svg(const vector<size_t>& bins) {
+void show_histogram_svg(const vector<size_t>& bins, string column_color) {
     const size_t SCREEN_WIDTH = 40;
     const size_t MAX_ASTERISK = SCREEN_WIDTH - 5;
 
@@ -45,6 +45,10 @@ void show_histogram_svg(const vector<size_t>& bins) {
     svg_begin(IMAGE_WIDTH, IMAGE_HEIGHT);
 
     double top = 0;
+
+    svg_header(IMAGE_WIDTH, top + TEXT_BASELINE, "Histogram");
+    top += TEXT_BASELINE + 10;
+
     for (size_t bin : bins) {
 
         double bin_width = BLOCK_WIDTH * bin;
@@ -55,8 +59,38 @@ void show_histogram_svg(const vector<size_t>& bins) {
         }
 
         svg_text(TEXT_LEFT, top + TEXT_BASELINE, std::to_string(bin));
-        svg_rect(TEXT_WIDTH, top, bin_width, BIN_HEIGHT, "red", "#ffeeee");
+        svg_rect(TEXT_WIDTH, top, bin_width, BIN_HEIGHT, "red", column_color);
         top += BIN_HEIGHT;
     }
     svg_end();
+}
+
+
+bool check_color(string color) {
+    if (color == "red") {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+string input_color_svg() {
+    string color;
+    do {
+        cerr << "Enter a column fill color: ";
+        getline(cin >> std::ws, color);
+        transform(color.begin(), color.end(), color.begin(), ::tolower);
+        if (!check_color(color)) {
+            cerr << "You entered red. Select another color.\n";
+        }
+    } while (!check_color(color));
+    return color;
+}
+
+void svg_header(const size_t width, const size_t baseline, string text) {
+    const auto SYMBOL_WIDTH = 7.5;
+    double word_width = text.length() * SYMBOL_WIDTH;
+    double x = (width - word_width) / 2;
+    svg_text(x, baseline, text);
 }
