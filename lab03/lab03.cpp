@@ -8,7 +8,6 @@
 
 using std::cout; using std::cin; using std::vector; using std::cerr; using std::string;
 
-
 vector<double> input_numbers(size_t number_count);
 void find_minmax(const vector<double>& numbers, double& min, double& max);
 vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count, size_t number_count);
@@ -118,6 +117,9 @@ void svg_rect(double x, double y, double width, double height, string stroke, st
 }
 
 void show_histogram_svg(const vector<size_t>& bins) {
+    const size_t SCREEN_WIDTH = 40;
+    const size_t MAX_ASTERISK = SCREEN_WIDTH - 5;
+
     const auto IMAGE_WIDTH = 400;
     const auto IMAGE_HEIGHT = 300;
     const auto TEXT_LEFT = 20;
@@ -126,12 +128,25 @@ void show_histogram_svg(const vector<size_t>& bins) {
     const auto BIN_HEIGHT = 30;
     const auto BLOCK_WIDTH = 10;
 
+    size_t max_count = 0;
+
+    for (size_t bin : bins) {
+        if (bin > max_count) {
+            max_count = bin;
+        }
+    }
+
     svg_begin(IMAGE_WIDTH, IMAGE_HEIGHT);
 
     double top = 0;
     for (size_t bin : bins) {
 
-        const double bin_width = BLOCK_WIDTH * bin;
+        double bin_width = BLOCK_WIDTH * bin;
+
+        if (max_count > MAX_ASTERISK) {
+            const double scaling_factor = static_cast<double>(MAX_ASTERISK) / max_count;
+            bin_width = BLOCK_WIDTH * bin * scaling_factor;
+        }
 
         svg_text(TEXT_LEFT, top + TEXT_BASELINE, std::to_string(bin));
         svg_rect(TEXT_WIDTH, top, bin_width, BIN_HEIGHT, "red", "#ffeeee");
