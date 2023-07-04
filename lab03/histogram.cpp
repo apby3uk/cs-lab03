@@ -14,15 +14,15 @@ void svg_end() {
     cout << "</svg>\n";
 }
 
-void svg_text(double left, double baseline, string text) {
-    cout << "<text x='" << left << "' y='" << baseline << "'>" << text << "</text>";
+void svg_text(double left, double baseline, string text, size_t font_size) {
+    cout << "<text x='" << left << "' y='" << baseline << "' font-size='" << font_size << "'>" << text << "</text>";
 }
 
 void svg_rect(double x, double y, double width, double height, string stroke, string fill) {
     cout << "<rect x='" << x << "' y='" << y << "' width='" << width << "' height='" << height << "' stroke='" << stroke << "' fill='" << fill << "'/>";
 }
 
-void show_histogram_svg(const vector<size_t>& bins, string column_color) {
+void show_histogram_svg(const vector<size_t>& bins, string column_color, size_t font_size) {
     const size_t SCREEN_WIDTH = 40;
     const size_t MAX_ASTERISK = SCREEN_WIDTH - 5;
 
@@ -46,7 +46,7 @@ void show_histogram_svg(const vector<size_t>& bins, string column_color) {
 
     double top = 0;
 
-    svg_header(IMAGE_WIDTH, top + TEXT_BASELINE, "Histogram");
+    svg_header(IMAGE_WIDTH, top + TEXT_BASELINE, "Histogram", font_size);
     top += TEXT_BASELINE + 10;
 
     for (size_t bin : bins) {
@@ -58,7 +58,7 @@ void show_histogram_svg(const vector<size_t>& bins, string column_color) {
             bin_width = BLOCK_WIDTH * bin * scaling_factor;
         }
 
-        svg_text(TEXT_LEFT, top + TEXT_BASELINE, std::to_string(bin));
+        svg_text(TEXT_LEFT, top + TEXT_BASELINE, std::to_string(bin), font_size);
         svg_rect(TEXT_WIDTH, top, bin_width, BIN_HEIGHT, "red", column_color);
         top += BIN_HEIGHT;
     }
@@ -88,9 +88,35 @@ string input_color_svg() {
     return color;
 }
 
-void svg_header(const size_t width, const size_t baseline, string text) {
+void svg_header(const size_t width, const size_t baseline, string text, size_t font_size) {
     const auto SYMBOL_WIDTH = 7.5;
     double word_width = text.length() * SYMBOL_WIDTH;
     double x = (width - word_width) / 2;
-    svg_text(x, baseline, text);
+    svg_text(x, baseline, text, font_size);
+}
+
+
+size_t input_font_size_svg() {
+    size_t font_size;
+    do {
+        cerr << "Enter font size (8-32): ";
+        cin >> font_size;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            font_size = 12;
+            break;
+        }
+        else if (int(font_size) <= 0) {
+            cerr << "Invalid font size! Font size can't be less than or equal to 0!\n";
+        }
+        else if (font_size < 8) {
+            cerr << "Invalid font size! Font size must be greater than or equal to 8!\n";
+        }
+        else if (font_size > 32) {
+            cerr << "Invalid font size! Font size must be less than or equal to 32!\n";
+        }
+    } while (font_size < 8 || font_size > 32);
+    return font_size;
+
 }

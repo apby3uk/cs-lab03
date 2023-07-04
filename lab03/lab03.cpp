@@ -1,6 +1,10 @@
 ﻿
 // Вариант 8
 
+/* Запрашивать у пользователя размер шрифта. За размер шрифта отвечает атрибут font-size. Считать
+12 значением по умолчанию. Не позволять вводить значения менее 8 и более 32. В этом случае
+предлагайте пользователю ввести значение заново с указанием причины. */
+
 #include "histogram.h"
 
 vector<double> input_numbers(size_t number_count);
@@ -24,6 +28,8 @@ int main() {
     cerr << "Enter bin count: ";
     cin >> bin_count;
 
+    size_t font_size = input_font_size_svg();
+
     string column_color = input_color_svg();
 
     // Обработка данных
@@ -32,7 +38,7 @@ int main() {
 
     // Вывод данных
 
-    show_histogram_svg(bins, column_color);
+    show_histogram_svg(bins, column_color, font_size);
 
     return 0;
 
