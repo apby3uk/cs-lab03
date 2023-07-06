@@ -3,15 +3,8 @@
 
 #include "histogram.h"
 
-struct Input {
-    vector<double> numbers;
-    size_t bin_count;
-    string column_color;
-
-};
-
 vector<double> input_numbers(istream& in, size_t number_count);
-vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count);
+vector<size_t> make_histogram(Input input);
 void find_minmax(const vector<double>& numbers, double& min, double& max);
 
 Input read_input(istream& in);
@@ -22,10 +15,9 @@ int main() {
 
     const auto input = read_input(cin);
 
-
     // Обработка данных
 
-    const auto bins = make_histogram(input.numbers, input.bin_count);
+    const auto bins = make_histogram(input);
 
     // Вывод данных
 
@@ -44,7 +36,11 @@ vector<double> input_numbers(istream& in, size_t number_count) {
     return result;
 }
 
-vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count) {
+vector<size_t> make_histogram(Input input) {
+
+    const vector<double>& numbers = input.numbers;
+    size_t bin_count = input.bin_count;
+
     vector<size_t> result(bin_count);
 
     double min, max;

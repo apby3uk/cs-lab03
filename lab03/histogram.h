@@ -8,6 +8,12 @@
 
 using std::cout; using std::cin; using std::vector; using std::cerr; using std::string; using std::istream;
 
+struct Input {
+    vector<double> numbers;
+    size_t bin_count;
+    string column_color;
+};
+
 void svg_begin(double width, double height);
 void svg_end();
 void svg_text(double left, double baseline, string text);
