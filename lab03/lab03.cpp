@@ -5,18 +5,21 @@
 #include <curl/curl.h>
 
 vector<double> input_numbers(istream& in, size_t number_count, bool prompt);
-vector<size_t> make_histogram(const Input& input);
+vector<size_t> make_histogram(Input input);
 void find_minmax(const vector<double>& numbers, double& min, double& max);
 
 Input read_input(istream& in, bool prompt);
 
 int main(int argc, char* argv[]) {
 
-    curl_global_init(CURL_GLOBAL_ALL);
-
     if (argc > 1) {
-        for (int i = 0; i < argc; i++) {
-            cout << "argv[" << i << "] = " << argv[i] << '\n';
+        CURL* curl = curl_easy_init();
+        if (curl) {
+            CURLcode res;
+            curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+            res = curl_easy_perform(curl);
+            curl_easy_cleanup(curl);
         }
         return 0;
     }
@@ -48,7 +51,7 @@ vector<double> input_numbers(istream& in, size_t number_count, bool prompt) {
     return result;
 }
 
-vector<size_t> make_histogram(const Input& input) {
+vector<size_t> make_histogram(Input input) {
 
     const vector<double>& numbers = input.numbers;
     size_t bin_count = input.bin_count;
