@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 
     // Вывод данных
 
-    show_histogram_svg(bins, input.column_color);
+    show_histogram_svg(bins, input);
 
     return 0;
 
@@ -79,7 +79,7 @@ vector<size_t> make_histogram(Input input) {
             result[bin_count - 1]++;
         }
     }
-    //sort(result.begin(), result.end()); // Вариант 8
+    sort(result.begin(), result.end()); // Вариант 8
     return result;
 }
 
@@ -119,6 +119,8 @@ Input read_input(istream& in, bool prompt) {
         cerr << "Enter bin count: ";
     }
     in >> data.bin_count;
+
+    data.font_size = input_font_size_svg(in, prompt);
 
     data.column_color = input_color_svg(in, prompt);
 
