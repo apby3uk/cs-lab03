@@ -1,5 +1,10 @@
 ﻿
 // Вариант 8
+/* С помощью функции curl_easy_getinfo() печатайте на стандартный вывод ошибок IP - адрес сервера,
+с которого скачан файл (не local). */
+
+//https://curl.se/libcurl/c/curl_easy_getinfo.html
+//https://curl.se/libcurl/c/CURLINFO_PRIMARY_IP.html
 
 #include "histogram.h"
 #include <curl/curl.h>
@@ -132,6 +137,7 @@ Input download(const string& address) {
 
     CURL* curl = curl_easy_init();
     if (curl) {
+        char* ip;
         CURLcode res;
         curl_easy_setopt(curl, CURLOPT_URL, address.c_str());
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // error 60
@@ -139,7 +145,10 @@ Input download(const string& address) {
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
         res = curl_easy_perform(curl);
 
-        if (res != CURLE_OK) { // CURLE_OK = 0
+        if ((res == CURLE_OK) && !curl_easy_getinfo(curl, CURLINFO_PRIMARY_IP, &ip) && ip) {
+            cerr << "IP: " << ip << '\n';
+        }
+        else {
             cout << curl_easy_strerror(res);
             exit(1);
         }
