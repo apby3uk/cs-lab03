@@ -2,14 +2,17 @@
 // Вариант 8
 
 #include "histogram.h"
+#include <curl/curl.h>
 
 vector<double> input_numbers(istream& in, size_t number_count, bool prompt);
-vector<size_t> make_histogram(Input input);
+vector<size_t> make_histogram(const Input& input);
 void find_minmax(const vector<double>& numbers, double& min, double& max);
 
 Input read_input(istream& in, bool prompt);
 
 int main() {
+
+    curl_global_init(CURL_GLOBAL_ALL);
 
     // Ввод данных
 
@@ -38,7 +41,7 @@ vector<double> input_numbers(istream& in, size_t number_count, bool prompt) {
     return result;
 }
 
-vector<size_t> make_histogram(Input input) {
+vector<size_t> make_histogram(const Input& input) {
 
     const vector<double>& numbers = input.numbers;
     size_t bin_count = input.bin_count;
