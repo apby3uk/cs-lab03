@@ -17,8 +17,15 @@ int main(int argc, char* argv[]) {
         if (curl) {
             CURLcode res;
             curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // error 60
             res = curl_easy_perform(curl);
+
+            if (res != CURLE_OK) { // CURLE_OK = 0
+                cout << curl_easy_strerror(res);
+                exit(1);
+            }
+            cout << res;
+
             curl_easy_cleanup(curl);
         }
         return 0;
