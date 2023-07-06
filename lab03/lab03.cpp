@@ -3,37 +3,26 @@
 
 #include "histogram.h"
 #include <curl/curl.h>
+#include <sstream>
 
 vector<double> input_numbers(istream& in, size_t number_count, bool prompt);
 vector<size_t> make_histogram(Input input);
 void find_minmax(const vector<double>& numbers, double& min, double& max);
 
 Input read_input(istream& in, bool prompt);
+Input download(const string& address);
 
 int main(int argc, char* argv[]) {
 
-    if (argc > 1) {
-        CURL* curl = curl_easy_init();
-        if (curl) {
-            CURLcode res;
-            curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // error 60
-            res = curl_easy_perform(curl);
-
-            if (res != CURLE_OK) { // CURLE_OK = 0
-                cout << curl_easy_strerror(res);
-                exit(1);
-            }
-            cout << res;
-
-            curl_easy_cleanup(curl);
-        }
-        return 0;
-    }
-
     // Ввод данных
 
-    const auto input = read_input(cin, true);
+    Input input;
+    if (argc > 1) {
+        input = download(argv[1]);
+    }
+    else {
+        input = read_input(cin, true);
+    }
 
     // Обработка данных
 
@@ -103,6 +92,7 @@ void find_minmax(const vector<double>& numbers, double& min, double& max) {
     }
 }
 
+
 Input read_input(istream& in, bool prompt) {
 
     Input data;
@@ -129,3 +119,23 @@ Input read_input(istream& in, bool prompt) {
     return data;
 }
 
+Input download(const string& address) {
+    std::stringstream buffer;
+
+    CURL* curl = curl_easy_init();
+    if (curl) {
+        CURLcode res;
+        curl_easy_setopt(curl, CURLOPT_URL, address.c_str());
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // error 60
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK) { // CURLE_OK = 0
+            cout << curl_easy_strerror(res);
+            exit(1);
+        }
+        //cout << res;
+
+        curl_easy_cleanup(curl);
+    }
+    return read_input(buffer, false);
+}

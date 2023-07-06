@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <vector> 
-#include <algorithm>
 #include <string> 
 
 using std::cout; using std::cin; using std::vector; using std::cerr; using std::string; using std::istream;

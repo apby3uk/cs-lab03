@@ -1,5 +1,6 @@
 
 #include "histogram.h"
+#include <algorithm>
 
 void svg_begin(double width, double height) {
     cout << "<?xml version='1.0' encoding='UTF-8'?>\n";
