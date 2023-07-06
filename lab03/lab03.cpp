@@ -3,8 +3,8 @@
 
 #include "histogram.h"
 
-vector<double> input_numbers(size_t number_count);
-vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count, size_t number_count);
+vector<double> input_numbers(istream& in, size_t number_count);
+vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count);
 void find_minmax(const vector<double>& numbers, double& min, double& max);
 
 int main() {
@@ -17,7 +17,7 @@ int main() {
     cin >> number_count;
 
     cerr << "Enter numbers: \n";
-    const auto numbers = input_numbers(number_count);
+    const auto numbers = input_numbers(cin, number_count);
 
     size_t bin_count;
 
@@ -28,7 +28,7 @@ int main() {
 
     // Обработка данных
 
-    const auto bins = make_histogram(numbers, bin_count, number_count);
+    const auto bins = make_histogram(numbers, bin_count);
 
     // Вывод данных
 
@@ -38,16 +38,16 @@ int main() {
 
 }
 
-vector<double> input_numbers(size_t number_count) {
+vector<double> input_numbers(istream& in, size_t number_count) {
     vector<double> result(number_count);
     for (size_t i = 0; i < number_count; i++) {
         cerr << i + 1 << ": ";
-        cin >> result[i];
+        in >> result[i];
     }
     return result;
 }
 
-vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count, size_t number_count) {
+vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count) {
     vector<size_t> result(bin_count);
 
     double min, max;
@@ -55,7 +55,7 @@ vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count, s
 
     double bin_size = (max - min) / bin_count;
 
-    for (size_t i = 0; i < number_count; i++) {
+    for (size_t i = 0; i < numbers.size(); i++) {
         bool found = false;
         for (size_t j = 0; (j < bin_count - 1) && !found; j++) {
             auto lo = min + j * bin_size;
