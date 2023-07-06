@@ -1,6 +1,5 @@
 
 #include "histogram.h"
-#include <algorithm>
 
 void svg_begin(double width, double height) {
     cout << "<?xml version='1.0' encoding='UTF-8'?>\n";
@@ -76,13 +75,13 @@ bool check_color(string color) {
     }
 }
 
-string input_color_svg(bool prompt) {
+string input_color_svg(istream& in, bool prompt) {
     string color;
     do {
         if (prompt) {
             cerr << "Enter a column fill color: ";
         }
-        getline(cin >> std::ws, color);
+        getline(in >> std::ws, color);
         transform(color.begin(), color.end(), color.begin(), ::tolower);
         if (!check_color(color)) {
             if (prompt) {

@@ -5,18 +5,23 @@
 #include <curl/curl.h>
 #include <sstream>
 
+using std::stringstream;
+
 vector<double> input_numbers(istream& in, size_t number_count, bool prompt);
 vector<size_t> make_histogram(Input input);
 void find_minmax(const vector<double>& numbers, double& min, double& max);
 
 Input read_input(istream& in, bool prompt);
 Input download(const string& address);
+size_t write_data(void* items, size_t item_size, size_t item_count, void* ctx);
+
 
 int main(int argc, char* argv[]) {
 
     // Ввод данных
 
     Input input;
+
     if (argc > 1) {
         input = download(argv[1]);
     }
@@ -35,6 +40,7 @@ int main(int argc, char* argv[]) {
     return 0;
 
 }
+
 
 vector<double> input_numbers(istream& in, size_t number_count, bool prompt) {
     vector<double> result(number_count);
@@ -114,19 +120,21 @@ Input read_input(istream& in, bool prompt) {
     }
     in >> data.bin_count;
 
-    data.column_color = input_color_svg(prompt);
+    data.column_color = input_color_svg(in, prompt);
 
     return data;
 }
 
 Input download(const string& address) {
-    std::stringstream buffer;
+    stringstream buffer;
 
     CURL* curl = curl_easy_init();
     if (curl) {
         CURLcode res;
         curl_easy_setopt(curl, CURLOPT_URL, address.c_str());
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // error 60
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
         res = curl_easy_perform(curl);
 
         if (res != CURLE_OK) { // CURLE_OK = 0
@@ -138,4 +146,13 @@ Input download(const string& address) {
         curl_easy_cleanup(curl);
     }
     return read_input(buffer, false);
+}
+
+size_t write_data(void* items, size_t item_size, size_t item_count, void* ctx) {
+    size_t data_size = item_size * item_count;
+    stringstream* buffer = reinterpret_cast<stringstream*>(ctx);
+    const char* accepted = reinterpret_cast<const char*>(items);
+    //(*buffer).write(accepted, data_size);
+    buffer->write(accepted, data_size);
+    return data_size;
 }

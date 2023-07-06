@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector> 
 #include <string> 
+#include <algorithm>
 
 using std::cout; using std::cin; using std::vector; using std::cerr; using std::string; using std::istream;
 
@@ -20,5 +21,5 @@ void svg_rect(double x = 0, double y = 0, double width = 100, double height = 20
 void show_histogram_svg(const vector<size_t>& bins, string column_color);
 
 bool check_color(string color);
-string input_color_svg(bool prompt);
+string input_color_svg(istream& in, bool prompt);
 void svg_header(const size_t width, const size_t baseline, string text);
