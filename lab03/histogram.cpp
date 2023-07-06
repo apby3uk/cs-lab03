@@ -75,14 +75,18 @@ bool check_color(string color) {
     }
 }
 
-string input_color_svg() {
+string input_color_svg(bool prompt) {
     string color;
     do {
-        cerr << "Enter a column fill color: ";
+        if (prompt) {
+            cerr << "Enter a column fill color: ";
+        }
         getline(cin >> std::ws, color);
         transform(color.begin(), color.end(), color.begin(), ::tolower);
         if (!check_color(color)) {
-            cerr << "You entered red. Select another color.\n";
+            if (prompt) {
+                cerr << "You entered red. Select another color.\n";
+            }
         }
     } while (!check_color(color));
     return color;

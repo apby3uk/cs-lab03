@@ -21,5 +21,5 @@ void svg_rect(double x = 0, double y = 0, double width = 100, double height = 20
 void show_histogram_svg(const vector<size_t>& bins, string column_color);
 
 bool check_color(string color);
-string input_color_svg();
+string input_color_svg(bool prompt);
 void svg_header(const size_t width, const size_t baseline, string text);

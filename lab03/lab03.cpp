@@ -3,17 +3,17 @@
 
 #include "histogram.h"
 
-vector<double> input_numbers(istream& in, size_t number_count);
+vector<double> input_numbers(istream& in, size_t number_count, bool prompt);
 vector<size_t> make_histogram(Input input);
 void find_minmax(const vector<double>& numbers, double& min, double& max);
 
-Input read_input(istream& in);
+Input read_input(istream& in, bool prompt);
 
 int main() {
 
     // Ввод данных
 
-    const auto input = read_input(cin);
+    const auto input = read_input(cin, true);
 
     // Обработка данных
 
@@ -27,10 +27,12 @@ int main() {
 
 }
 
-vector<double> input_numbers(istream& in, size_t number_count) {
+vector<double> input_numbers(istream& in, size_t number_count, bool prompt) {
     vector<double> result(number_count);
     for (size_t i = 0; i < number_count; i++) {
-        cerr << i + 1 << ": ";
+        if (prompt) {
+            cerr << i + 1 << ": ";
+        }
         in >> result[i];
     }
     return result;
@@ -81,22 +83,28 @@ void find_minmax(const vector<double>& numbers, double& min, double& max) {
     }
 }
 
-Input read_input(istream& in) {
+Input read_input(istream& in, bool prompt) {
 
     Input data;
 
+    if (prompt) {
+        cerr << "Enter number count: ";
+    }
     size_t number_count;
-
-    cerr << "Enter number count: ";
     in >> number_count;
 
-    cerr << "Enter numbers: \n";
-    data.numbers = input_numbers(in, number_count);
+    if (prompt) {
+        cerr << "Enter numbers: \n";
+    }
 
-    cerr << "Enter bin count: ";
+    data.numbers = input_numbers(in, number_count, prompt);
+
+    if (prompt) {
+        cerr << "Enter bin count: ";
+    }
     in >> data.bin_count;
 
-    data.column_color = input_color_svg();
+    data.column_color = input_color_svg(prompt);
 
     return data;
 }
