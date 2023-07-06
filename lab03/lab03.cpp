@@ -3,36 +3,33 @@
 
 #include "histogram.h"
 
+struct Input {
+    vector<double> numbers;
+    size_t bin_count;
+    string column_color;
+
+};
+
 vector<double> input_numbers(istream& in, size_t number_count);
 vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count);
 void find_minmax(const vector<double>& numbers, double& min, double& max);
+
+Input read_input(istream& in);
 
 int main() {
 
     // Ввод данных
 
-    size_t number_count;
+    const auto input = read_input(cin);
 
-    cerr << "Enter number count: ";
-    cin >> number_count;
-
-    cerr << "Enter numbers: \n";
-    const auto numbers = input_numbers(cin, number_count);
-
-    size_t bin_count;
-
-    cerr << "Enter bin count: ";
-    cin >> bin_count;
-
-    string column_color = input_color_svg();
 
     // Обработка данных
 
-    const auto bins = make_histogram(numbers, bin_count);
+    const auto bins = make_histogram(input.numbers, input.bin_count);
 
     // Вывод данных
 
-    show_histogram_svg(bins, column_color);
+    show_histogram_svg(bins, input.column_color);
 
     return 0;
 
@@ -87,3 +84,24 @@ void find_minmax(const vector<double>& numbers, double& min, double& max) {
         }
     }
 }
+
+Input read_input(istream& in) {
+
+    Input data;
+
+    size_t number_count;
+
+    cerr << "Enter number count: ";
+    in >> number_count;
+
+    cerr << "Enter numbers: \n";
+    data.numbers = input_numbers(in, number_count);
+
+    cerr << "Enter bin count: ";
+    in >> data.bin_count;
+
+    data.column_color = input_color_svg();
+
+    return data;
+}
+
